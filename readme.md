@@ -10,4 +10,4 @@ Additional:
 - Laravel Vue Pagination
 - Weidner/goutte (Scraping Nodes)
 
-Mysql Database 
+Mysql Database (test2019.sql)
