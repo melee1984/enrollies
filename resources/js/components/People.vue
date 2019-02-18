@@ -97,12 +97,12 @@
 							<div class="col-md-6">
 								<div class="form-group">
 						            <label for="exampleInputEmail1">Fullname</label>
-						            <input type="text"class="form-control"  name="name" id="name"   v-model="fields.name" placeholder="Lastname Middlename, Firstname"/>
+						            <input type="text"class="form-control"  name="name" id="name"   v-model="fields.name" placeholder="Lastname Middlename, Firstname" required/>
 									<small id="emailHelp" class="form-text text-muted">Text Format: Lastname Middlename, Firstname</small>
 					            </div>
 					            <div class="form-group">
 					              	<label for="exampleInputEmail1">School</label>
-						            <input type="text" class="form-control" name="school" id="school"  v-model="fields.school"  />
+						            <input type="text" class="form-control" name="school" id="school"  v-model="fields.school"  required/>
 					            </div>
 					            <input type="submit" class="btn btn-default btn-sm" value="Add Record" v-on:click="submitRecord()" />
 					            <input type="button" class="btn btn-default btn-sm" value="Close" v-on:click="closeExaminee()" />
@@ -152,7 +152,10 @@
 		data() {
 			return {
 				
-				fields: {},
+				fields: {
+					name: '',
+					school: '',
+				},
       			errors: {},
       			search: null,
 				boardPasser: [],
@@ -262,27 +265,47 @@
 				self.errors = {};
 				self.loadingExaminee = true;
 
-				axios.post('/examinee/add/submit', self.fields).then(response => {
-			        
-			        self.examinee =  response.data.examinee;
-			        
-			        self.loadingExaminee = false;
-			        self.addExamineeForm = false;
+				if (this.validateFields(self.fields)) {
 
-			     }).catch(error => {
-			        if (error.response.status === 422) {
-			          self.errors = error.response.data.errors || {};
-			        }
-			        else {
+					axios.post('/examinee/add/submit', self.fields).then(response => {
+			        
+				        self.examinee =  response.data.examinee;
+						self.loadingExaminee = false;
+				        self.addExamineeForm = false;
 
-			        }
-			     });
+				     }).catch(error => {
+				        if (error.response.status === 422) {
+				          self.errors = error.response.data.errors || {};
+				        }
+				        else {
+
+				        }
+				     });
+
+
+				}
+				
 			},
 			closeExaminee: function() {
 				var self = this;
 
 				self.addExamineeForm = false;
-			}
+			},
+
+			validateFields: function(obj) {
+
+				if (obj.name=="") {
+					alert('Please enter Fullname.');
+					return false;
+				}
+				else if (obj.school=="") {
+					alert('Please enter School name.');
+					return false;
+				}
+
+				return true;
+
+			},
 		}
 	}
 </script>

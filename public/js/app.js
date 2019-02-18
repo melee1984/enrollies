@@ -1915,7 +1915,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      fields: {},
+      fields: {
+        name: '',
+        school: ''
+      },
       errors: {},
       search: null,
       boardPasser: [],
@@ -1996,19 +1999,33 @@ __webpack_require__.r(__webpack_exports__);
       var self = this;
       self.errors = {};
       self.loadingExaminee = true;
-      axios.post('/examinee/add/submit', self.fields).then(function (response) {
-        self.examinee = response.data.examinee;
-        self.loadingExaminee = false;
-        self.addExamineeForm = false;
-      }).catch(function (error) {
-        if (error.response.status === 422) {
-          self.errors = error.response.data.errors || {};
-        } else {}
-      });
+
+      if (this.validateFields(self.fields)) {
+        axios.post('/examinee/add/submit', self.fields).then(function (response) {
+          self.examinee = response.data.examinee;
+          self.loadingExaminee = false;
+          self.addExamineeForm = false;
+        }).catch(function (error) {
+          if (error.response.status === 422) {
+            self.errors = error.response.data.errors || {};
+          } else {}
+        });
+      }
     },
     closeExaminee: function closeExaminee() {
       var self = this;
       self.addExamineeForm = false;
+    },
+    validateFields: function validateFields(obj) {
+      if (obj.name == "") {
+        alert('Please enter Fullname.');
+        return false;
+      } else if (obj.school == "") {
+        alert('Please enter School name.');
+        return false;
+      }
+
+      return true;
     }
   }
 });
@@ -38543,7 +38560,8 @@ var render = function() {
                             type: "text",
                             name: "name",
                             id: "name",
-                            placeholder: "Lastname Middlename, Firstname"
+                            placeholder: "Lastname Middlename, Firstname",
+                            required: ""
                           },
                           domProps: { value: _vm.fields.name },
                           on: {
@@ -38585,7 +38603,12 @@ var render = function() {
                             }
                           ],
                           staticClass: "form-control",
-                          attrs: { type: "text", name: "school", id: "school" },
+                          attrs: {
+                            type: "text",
+                            name: "school",
+                            id: "school",
+                            required: ""
+                          },
                           domProps: { value: _vm.fields.school },
                           on: {
                             input: function($event) {
