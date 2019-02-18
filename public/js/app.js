@@ -1861,13 +1861,48 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      fields: {},
+      errors: {},
       boardPasser: [],
       schoolTop: [],
       examinee: [],
-      loading: true
+      loading: true,
+      loadingExaminee: true,
+      addExamineeForm: false
     };
   },
   created: function created() {
@@ -1881,6 +1916,7 @@ __webpack_require__.r(__webpack_exports__);
         self.schoolTop = response.data.topSchool;
         self.examinee = response.data.examinee;
         self.loading = false;
+        self.loadingExaminee = false;
       }).catch(function (error) {
         console.log(error);
       });
@@ -1895,9 +1931,32 @@ __webpack_require__.r(__webpack_exports__);
         self.schoolTop = response.data.topSchool;
         self.examinee = response.data.examinee;
         self.loading = false;
+        self.loadingExaminee = false;
       }).catch(function (error) {
         console.log(error);
       });
+    },
+    addExaminee: function addExaminee() {
+      var self = this;
+      self.addExamineeForm = true;
+      selft.loadingExaminee = true;
+    },
+    submitRecord: function submitRecord() {
+      var self = this;
+      self.errors = {};
+      self.loadingExaminee = true;
+      axios.post('/examinee/add/submit', self.fields).then(function (response) {
+        self.examinee = response.data.examinee;
+        self.loadingExaminee = false;
+      }).catch(function (error) {
+        if (error.response.status === 422) {
+          self.errors = error.response.data.errors || {};
+        } else {}
+      });
+    },
+    closeExaminee: function closeExaminee() {
+      var self = this;
+      self.addExamineeForm = false;
     }
   }
 });
@@ -36972,7 +37031,7 @@ var render = function() {
         [
           _c("h3"),
           _vm._v(" "),
-          _c("table", { staticClass: "table table-hover" }, [
+          _c("table", { staticClass: "table table-hover dataTable" }, [
             _vm._m(1),
             _vm._v(" "),
             _c(
@@ -37013,7 +37072,7 @@ var render = function() {
       _c("div", { staticClass: "tab-pane fade", attrs: { id: "school" } }, [
         _c("h3", [_vm._v("School")]),
         _vm._v(" "),
-        _c("table", { staticClass: "table table-hover" }, [
+        _c("table", { staticClass: "table table-hover dataTable" }, [
           _vm._m(2),
           _vm._v(" "),
           _c(
@@ -37042,9 +37101,135 @@ var render = function() {
         "div",
         { staticClass: "tab-pane fade", attrs: { id: "new-examinee" } },
         [
+          _vm.addExamineeForm
+            ? _c("div", { staticClass: "form-upload-card" }, [
+                _c("div", { staticClass: "jumbotron" }, [
+                  _c("h4", { staticClass: "display-10" }, [
+                    _vm._v("Add Examinee")
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-md-6" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "exampleInputEmail1" } }, [
+                          _vm._v("Fullname")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.fields.name,
+                              expression: "fields.name"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "text",
+                            name: "name",
+                            id: "name",
+                            placeholder: "Lastname Middlename, Firstname"
+                          },
+                          domProps: { value: _vm.fields.name },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.fields, "name", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "small",
+                          {
+                            staticClass: "form-text text-muted",
+                            attrs: { id: "emailHelp" }
+                          },
+                          [
+                            _vm._v(
+                              "Text Format: Lastname Middlename, Firstname"
+                            )
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "exampleInputEmail1" } }, [
+                          _vm._v("School")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.fields.school,
+                              expression: "fields.school"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { type: "text", name: "school", id: "school" },
+                          domProps: { value: _vm.fields.school },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.fields,
+                                "school",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        staticClass: "btn btn-default btn-sm",
+                        attrs: { type: "submit", value: "Add Record" },
+                        on: {
+                          click: function($event) {
+                            return _vm.submitRecord()
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("input", {
+                        staticClass: "btn btn-default btn-sm",
+                        attrs: { type: "button", value: "Close" },
+                        on: {
+                          click: function($event) {
+                            return _vm.closeExaminee()
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-6" }, [
+                      _vm._v("\n\t\t\t\t\t\t\t\t \n\t\t\t\t\t\t\t")
+                    ])
+                  ])
+                ])
+              ])
+            : _vm._e(),
+          _vm._v(" "),
           _c("h3", [_vm._v("New Examinee")]),
           _vm._v(" "),
-          _c("table", { staticClass: "table table-hover" }, [
+          _c(
+            "a",
+            {
+              staticClass: "btn btn-lg btn-primary",
+              attrs: { role: "button" },
+              on: { click: _vm.addExaminee }
+            },
+            [_vm._v("Add Examinee")]
+          ),
+          _vm._v(" "),
+          _c("table", { staticClass: "table table-hover dataTable" }, [
             _vm._m(3),
             _vm._v(" "),
             _c(

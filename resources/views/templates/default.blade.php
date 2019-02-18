@@ -39,7 +39,7 @@
 
 	<!-- More Javascript here --> 
  	@include('includes.footer')
-	
+
 
 </body>
 </html>

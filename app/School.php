@@ -59,4 +59,23 @@ class School extends Model
 
 	}
 
+	public static function topSchool() {
+
+		// 	Top School 
+		$dataCollection = array();
+		$dataTopSchool = array();
+
+		$rsSchool = School::getTopSchool();
+
+		foreach($rsSchool as $list) { 
+			
+			$dataCollection['school'] = $list->school_name;
+			$dataCollection['total'] = $list->total;
+
+			array_push($dataTopSchool, $dataCollection);
+		}
+
+		return $dataTopSchool;
+	}
+
 }

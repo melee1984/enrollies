@@ -17,7 +17,7 @@
 			
 			<div id="board" class="tab-pane fade in active">
 				<h3></h3>
-				<table class="table table-hover">
+				<table class="table table-hover dataTable">
 					<thead>
 						<tr>
 							<th>Fullname</th>
@@ -45,7 +45,7 @@
 
 			<div id="school" class="tab-pane fade">
 				<h3>School</h3>
-				<table class="table table-hover">
+				<table class="table table-hover dataTable">
 					<thead>
 						<tr>
 							<th>Campus</th>
@@ -68,8 +68,39 @@
 			</div>
 
 			<div id="new-examinee" class="tab-pane fade">
+
+
+				<div class="form-upload-card" v-if="addExamineeForm">
+					<div class="jumbotron">
+						<h4 class="display-10">Add Examinee</h4>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+						            <label for="exampleInputEmail1">Fullname</label>
+						            <input type="text"class="form-control"  name="name" id="name"   v-model="fields.name" placeholder="Lastname Middlename, Firstname"/>
+									<small id="emailHelp" class="form-text text-muted">Text Format: Lastname Middlename, Firstname</small>
+					            </div>
+					            <div class="form-group">
+					              	<label for="exampleInputEmail1">School</label>
+						            <input type="text" class="form-control" name="school" id="school"  v-model="fields.school"  />
+					            </div>
+					            <input type="submit" class="btn btn-default btn-sm" value="Add Record" v-on:click="submitRecord()" />
+					            <input type="button" class="btn btn-default btn-sm" value="Close" v-on:click="closeExaminee()" />
+							</div> 
+
+							<div class="col-md-6">
+								&nbsp;
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+
 				<h3>New Examinee</h3>
-				<table class="table table-hover">
+
+				<a class="btn btn-lg btn-primary" v-on:click="addExaminee" role="button">Add Examinee</a>
+				<table class="table table-hover dataTable">
 					<thead>
 						<tr>
 							<th>Fullname</th>
@@ -100,10 +131,16 @@
 	export default {
 		data() {
 			return {
+				
+				fields: {},
+      			errors: {},
+
 				boardPasser: [],
 				schoolTop: [],	
 				examinee: [],	
 				loading: true,
+				loadingExaminee: true,
+				addExamineeForm: false,
 			}
 		},
 		created() {
@@ -120,6 +157,7 @@
                         self.schoolTop = response.data.topSchool;
                         self.examinee =  response.data.examinee;
                         self.loading = false;
+                        self.loadingExaminee = false;
 
                 })
                 .catch(function (error) {
@@ -134,7 +172,6 @@
 
 				var self = this;
 				self.loading = true;
-
 				self.boardPasser = [];
 				self.schoolTop = [];
 
@@ -144,13 +181,44 @@
                         self.schoolTop = response.data.topSchool;
 						self.examinee =  response.data.examinee;
 						self.loading = false;
+						self.loadingExaminee = false;
+
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
 
-               
+			},
+			addExaminee: function() {
+				var self = this;
 
+				self.addExamineeForm = true;
+				selft.loadingExaminee = true;
+			},
+			submitRecord: function() {
+				var self = this;
+				
+				self.errors = {};
+				self.loadingExaminee = true;
+
+				axios.post('/examinee/add/submit', self.fields).then(response => {
+			        
+			        self.examinee =  response.data.examinee;
+			        self.loadingExaminee = false;
+
+			     }).catch(error => {
+			        if (error.response.status === 422) {
+			          self.errors = error.response.data.errors || {};
+			        }
+			        else {
+
+			        }
+			     });
+			},
+			closeExaminee: function() {
+				var self = this;
+
+				self.addExamineeForm = false;
 			}
 		}
 	}

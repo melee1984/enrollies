@@ -33,32 +33,10 @@ class RequestController extends Controller
 			array_push($data, $dataCollection);
 		}
 
-		// 	Top School 
-		$dataCollection = array();
-		
-		$rsSchool = School::getTopSchool();
-
-		foreach($rsSchool as $list) { 
-			
-			$dataCollection['school'] = $list->school_name;
-			$dataCollection['total'] = $list->total;
-
-			array_push($dataTopSchool, $dataCollection);
-		}
-
-		// get the examinee
-		// 	Top School 
-		$dataCollection = array();
-		
-		$rsExaminee = Passer::whereStatus(1)->get();
-
-		foreach($rsExaminee as $list) { 
-			
-			$dataCollection['school'] = $list->school->school_name;
-			$dataCollection['fullname'] = $list->fullname;
-
-			array_push($dataExaminee, $dataCollection);
-		}
+		// Top School 
+		$dataTopSchool = School::topSchool();
+		// Examinee Record 
+		$dataExaminee = Passer::getPasser(2);
 
 
 	    return response()->json(['boardPasser' => $data, 'topSchool' => $dataTopSchool, 'examinee' => $dataExaminee]); 
