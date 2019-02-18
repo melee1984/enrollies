@@ -20,10 +20,25 @@ class RequestController extends Controller
 		$dataExaminee = array();
 		$dataCollection = array();
 		
+		$search = @$_REQUEST['search'];
+
+		if ($search!="") {
+
+			$rs = Passer::join('tbl_school', 'tbl_school.id', '=', 'tbl_student.school_id')
+						->Where('fullname', 'like', '%'.$search.'%')
+						->orWhere('campus_eligibility', 'like', '%'.$search.'%')
+						->orWhere('division', 'like', '%'.$search.'%')
+						->orWhere('school_name', 'like', '%'.$search.'%')
+						 
+						->paginate(50);
+ 
+		}
+		else {
+			$rs = Passer::whereStatus(2)->paginate(50);
+		}
+
+
 		// Board Passer 
-
-		$rs = Passer::whereStatus(2)->get();
-
 		foreach($rs as $list) {
 
 			$dataCollection['fullname'] = $list->lname . ", " . $list->fname . " " . $list->mname;
@@ -39,7 +54,8 @@ class RequestController extends Controller
 		$dataExaminee = Passer::getPasser(2);
 
 
-	    return response()->json(['boardPasser' => $data, 'topSchool' => $dataTopSchool, 'examinee' => $dataExaminee]); 
+	    return response()->json(['boardPasser' => $rs, 'topSchool' => $dataTopSchool,  'examinee' => $dataExaminee
+	    					]); 
 	}
 
 	public function processBoardPasser() {
@@ -85,6 +101,7 @@ class RequestController extends Controller
 				$rs->status = 2;
 
 				$rs->save();
+
 				$dataCollection = array();
 			}
 			else {

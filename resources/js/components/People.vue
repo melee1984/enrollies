@@ -1,3 +1,4 @@
+
 <template>
 
 	<div>
@@ -17,35 +18,49 @@
 			
 			<div id="board" class="tab-pane fade in active">
 				<h3></h3>
+
+				<div class="form-group">
+    				<label for="exampleInputEmail1">Search</label>
+			    	<input type="email" class="form-control" id="seach" name="seach"  v-model="search"  placeholder="Search" @change="searchFilter">
+			    	<small id="emailHelp" class="form-text text-muted">Search filter based on the fields available</small>
+			  	</div>
+
 				<table class="table table-hover dataTable">
 					<thead>
 						<tr>
-							<th>Fullname</th>
-							<th>Campus Eligibility</th>
-							<th>School</th>
-							<th>Division</th>
+							<td>Fullname</td>
+							<td>Campus Eligibility</td>
+							<td>School</td>
+							<td>Division</td>
 						</tr>
 					</thead>
 					<tbody>
-						
-						<tr v-if="loading">
-							<td>Please wait while updating content</td>
-						</tr>
+					
 
-						<tr v-for="list in boardPasser">
+						<tr v-for="list in boardPasser.data">
 							<td width="40">{{ list.fullname }}</td>
-							<td width="20">{{ list.ce }}</td>
-							<td width="20">{{ list.school }}</td>
+							<td width="20">{{ list.campus_eligibility }}</td>
+							<td width="20">{{ list.school['school_name'] }}</td>
 							<td width="20">{{ list.division }}</td>
 						</tr>
 							
 					</tbody>
+
+					<tfoot>
+						<tr>
+							<td colspan="4">
+								<pagination :data="boardPasser" v-on:pagination-change-page="pageClick"></pagination>
+							</td>
+						</tr>
+					</tfoot>
+
+
 				</table>
 			</div>
 
 			<div id="school" class="tab-pane fade">
 				<h3>School</h3>
-				<table class="table table-hover dataTable">
+				<table class="table table-hover">
 					<thead>
 						<tr>
 							<th>Campus</th>
@@ -63,8 +78,13 @@
 							<td>{{ list.total }}</td>
 						</tr>
 
+
 					</tbody>
+
+					
 				</table>
+
+
 			</div>
 
 			<div id="new-examinee" class="tab-pane fade">
@@ -100,7 +120,7 @@
 				<h3>New Examinee</h3>
 
 				<a class="btn btn-lg btn-primary" v-on:click="addExaminee" role="button">Add Examinee</a>
-				<table class="table table-hover dataTable">
+				<table class="table table-hover">
 					<thead>
 						<tr>
 							<th>Fullname</th>
@@ -134,7 +154,7 @@
 				
 				fields: {},
       			errors: {},
-
+      			search: null,
 				boardPasser: [],
 				schoolTop: [],	
 				examinee: [],	
@@ -158,14 +178,54 @@
                         self.examinee =  response.data.examinee;
                         self.loading = false;
                         self.loadingExaminee = false;
-
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
 
+			},
+
+			pageClick: function(page = 1) {
+
+				var self = this;
+
+				if (typeof page === 'undefined') {
+					page = 1;
+				}
+
+				axios.get('/board/passer?page='+page)
+                    .then(function (response) {
+                        self.boardPasser = response.data.boardPasser;
+                        self.schoolTop = response.data.topSchool;
+                        self.examinee =  response.data.examinee;
+                        self.loading = false;
+                        self.loadingExaminee = false;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
 
 			},
+
+			searchFilter: function() {
+
+				var self = this;
+
+				axios.get('/board/passer?search='+self.search)
+                    .then(function (response) {
+                        self.boardPasser = response.data.boardPasser;
+                        self.schoolTop = response.data.topSchool;
+                        self.examinee =  response.data.examinee;
+                        self.loading = false;
+                        self.loadingExaminee = false;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+
+			},
+
+
 
 			updateList: function() {
 
@@ -181,6 +241,8 @@
 						self.examinee =  response.data.examinee;
 						self.loading = false;
 						self.loadingExaminee = false;
+
+
 
                 })
                 .catch(function (error) {

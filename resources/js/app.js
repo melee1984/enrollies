@@ -24,6 +24,7 @@ window.Vue = require('vue');
 
 // Initialize People 
 Vue.component('people', require('./components/People.vue').default);
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
