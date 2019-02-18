@@ -92,7 +92,9 @@ class RequestController extends Controller
 			}
 		}
 
-		return response()->json(['status' => 1]); 
+		$this->getBoardPasser();
+
+		// return response()->json(['status' => 1]); 
 
 	}
 

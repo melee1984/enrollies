@@ -1926,7 +1926,7 @@ __webpack_require__.r(__webpack_exports__);
       self.loading = true;
       self.boardPasser = [];
       self.schoolTop = [];
-      axios.get('/board/passer').then(function (response) {
+      axios.get('/process').then(function (response) {
         self.boardPasser = response.data.boardPasser;
         self.schoolTop = response.data.topSchool;
         self.examinee = response.data.examinee;
@@ -1948,6 +1948,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('/examinee/add/submit', self.fields).then(function (response) {
         self.examinee = response.data.examinee;
         self.loadingExaminee = false;
+        self.addExamineeForm = false;
       }).catch(function (error) {
         if (error.response.status === 422) {
           self.errors = error.response.data.errors || {};

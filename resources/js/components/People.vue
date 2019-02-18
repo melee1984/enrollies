@@ -164,7 +164,6 @@
                     console.log(error);
                 });
 
-               	
 
 			},
 
@@ -175,7 +174,7 @@
 				self.boardPasser = [];
 				self.schoolTop = [];
 
-				axios.get('/board/passer')
+				axios.get('/process')
                     .then(function (response) {
                         self.boardPasser = response.data.boardPasser;
                         self.schoolTop = response.data.topSchool;
@@ -204,7 +203,9 @@
 				axios.post('/examinee/add/submit', self.fields).then(response => {
 			        
 			        self.examinee =  response.data.examinee;
+			        
 			        self.loadingExaminee = false;
+			        self.addExamineeForm = false;
 
 			     }).catch(error => {
 			        if (error.response.status === 422) {
