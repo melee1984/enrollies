@@ -9,5 +9,9 @@ Additional:
 - Axios (Ajax)
 - Laravel Vue Pagination
 - Weidner/goutte (Scraping Nodes)
+- Examinee validation form
 
 Mysql Database (test2019.sql)
+
+
+
