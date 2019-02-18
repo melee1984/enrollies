@@ -14,4 +14,7 @@ Additional:
 Mysql Database (test2019.sql)
 
 
+To run:
 
+php artisan server
+npm run watch 
