@@ -1848,11 +1848,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       boardPasser: [],
-      schoolTop: []
+      schoolTop: [],
+      examinee: [],
+      loading: true
     };
   },
   created: function created() {
@@ -1864,6 +1879,22 @@ __webpack_require__.r(__webpack_exports__);
       axios.get('/board/passer').then(function (response) {
         self.boardPasser = response.data.boardPasser;
         self.schoolTop = response.data.topSchool;
+        self.examinee = response.data.examinee;
+        self.loading = false;
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+    updateList: function updateList() {
+      var self = this;
+      self.loading = true;
+      self.boardPasser = [];
+      self.schoolTop = [];
+      axios.get('/board/passer').then(function (response) {
+        self.boardPasser = response.data.boardPasser;
+        self.schoolTop = response.data.topSchool;
+        self.examinee = response.data.examinee;
+        self.loading = false;
       }).catch(function (error) {
         console.log(error);
       });
@@ -36916,9 +36947,23 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm._m(0),
+    _c("div", { staticClass: "jumbotron" }, [
+      _c("h1", [_vm._v("Board Passer")]),
+      _vm._v(" "),
+      _c("p", { staticClass: "lead" }, [_vm._v("Please find the list below")]),
+      _vm._v(" "),
+      _c(
+        "a",
+        {
+          staticClass: "btn btn-lg btn-primary",
+          attrs: { role: "button" },
+          on: { click: _vm.updateList }
+        },
+        [_vm._v("Click here to update list")]
+      )
+    ]),
     _vm._v(" "),
-    _vm._m(1),
+    _vm._m(0),
     _vm._v(" "),
     _c("div", { staticClass: "tab-content" }, [
       _c(
@@ -36928,30 +36973,38 @@ var render = function() {
           _c("h3"),
           _vm._v(" "),
           _c("table", { staticClass: "table table-hover" }, [
-            _vm._m(2),
+            _vm._m(1),
             _vm._v(" "),
             _c(
               "tbody",
-              _vm._l(_vm.boardPasser, function(list) {
-                return _c("tr", [
-                  _c("td", { attrs: { width: "40" } }, [
-                    _vm._v(_vm._s(list.fullname))
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { attrs: { width: "20" } }, [
-                    _vm._v(_vm._s(list.ce))
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { attrs: { width: "20" } }, [
-                    _vm._v(_vm._s(list.school))
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { attrs: { width: "20" } }, [
-                    _vm._v(_vm._s(list.division))
+              [
+                _vm.loading
+                  ? _c("tr", [
+                      _c("td", [_vm._v("Please wait while updating content")])
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm._l(_vm.boardPasser, function(list) {
+                  return _c("tr", [
+                    _c("td", { attrs: { width: "40" } }, [
+                      _vm._v(_vm._s(list.fullname))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { attrs: { width: "20" } }, [
+                      _vm._v(_vm._s(list.ce))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { attrs: { width: "20" } }, [
+                      _vm._v(_vm._s(list.school))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { attrs: { width: "20" } }, [
+                      _vm._v(_vm._s(list.division))
+                    ])
                   ])
-                ])
-              }),
-              0
+                })
+              ],
+              2
             )
           ])
         ]
@@ -36961,46 +37014,65 @@ var render = function() {
         _c("h3", [_vm._v("School")]),
         _vm._v(" "),
         _c("table", { staticClass: "table table-hover" }, [
-          _vm._m(3),
+          _vm._m(2),
           _vm._v(" "),
           _c(
             "tbody",
-            _vm._l(_vm.schoolTop, function(list) {
-              return _c("tr", [
-                _c("td", [_vm._v(_vm._s(list.school))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(list.total))])
-              ])
-            }),
-            0
+            [
+              _vm.loading
+                ? _c("tr", [
+                    _c("td", [_vm._v("Please wait while updating content")])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm._l(_vm.schoolTop, function(list) {
+                return _c("tr", [
+                  _c("td", [_vm._v(_vm._s(list.school))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(list.total))])
+                ])
+              })
+            ],
+            2
           )
         ])
       ]),
       _vm._v(" "),
-      _vm._m(4)
+      _c(
+        "div",
+        { staticClass: "tab-pane fade", attrs: { id: "new-examinee" } },
+        [
+          _c("h3", [_vm._v("New Examinee")]),
+          _vm._v(" "),
+          _c("table", { staticClass: "table table-hover" }, [
+            _vm._m(3),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              [
+                _vm.loading
+                  ? _c("tr", [
+                      _c("td", [_vm._v("Please wait while updating content")])
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm._l(_vm.examinee, function(list) {
+                  return _c("tr", [
+                    _c("td", [_vm._v(_vm._s(list.fullname))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(list.school))])
+                  ])
+                })
+              ],
+              2
+            )
+          ])
+        ]
+      )
     ])
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "jumbotron" }, [
-      _c("h1", [_vm._v("Board Passer")]),
-      _vm._v(" "),
-      _c("p", { staticClass: "lead" }, [_vm._v("Please find the list below")]),
-      _vm._v(" "),
-      _c(
-        "a",
-        {
-          staticClass: "btn btn-lg btn-primary",
-          attrs: { href: "/docs/4.3/components/navbar/", role: "button" }
-        },
-        [_vm._v("Click here to update list")]
-      )
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -37062,31 +37134,13 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "tab-pane fade", attrs: { id: "new-examinee" } },
-      [
-        _c("h3", [_vm._v("New Examinee")]),
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Fullname")]),
         _vm._v(" "),
-        _c("table", { staticClass: "table table-hover" }, [
-          _c("thead", [
-            _c("tr", [
-              _c("th", [_vm._v("Fullname")]),
-              _vm._v(" "),
-              _c("th", [_vm._v("School")])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("tbody", [
-            _c("tr", [
-              _c("td", [_vm._v("Parba, Leslie Candelaria")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("STI")])
-            ])
-          ])
-        ])
-      ]
-    )
+        _c("th", [_vm._v("School")])
+      ])
+    ])
   }
 ]
 render._withStripped = true

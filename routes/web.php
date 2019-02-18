@@ -16,3 +16,4 @@ Route::get('/', 'PasserController@default');
 
 // Get the list of board passer 
 Route::get('board/passer', 'RequestController@getBoardPasser');
+Route::get('process', 'RequestController@processBoardPasser');
